@@ -3,7 +3,9 @@ package com.safetynet.alerts.dao.personDao;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.safetynet.alerts.dao.jsontools.JsonReaderInterface;
 import com.safetynet.alerts.model.Database;
@@ -29,7 +31,8 @@ public class PersonRepository implements PersonRepositoryInterface{
 		Database database = jsonReader.getDatabase();
 		
 		List<Person> persons = database.getPersons();
-		Person foundPerson = persons.stream().filter(pers -> pers.equals(person)).findFirst().orElse(null);
+		Person foundPerson = persons.stream().filter(pers -> pers.equals(person)).findFirst().orElseThrow(
+				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Person Not Found"));
 		persons.remove(foundPerson);
 		database.setPersons(persons);
 		
@@ -59,7 +62,8 @@ public class PersonRepository implements PersonRepositoryInterface{
 		
 		Person foundPerson = persons.stream().filter(pers -> 
 		pers.getFirstName().equals(person.getFirstName()) 
-		&& pers.getLastName().equals(person.getLastName())).findFirst().orElse(null);
+		&& pers.getLastName().equals(person.getLastName())).findFirst().orElseThrow(
+				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Person Not Found"));
 	
 		persons.remove(foundPerson);
 		persons.add(person);
