@@ -1,30 +1,23 @@
 package com.safetynet.alerts.web;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.safetynet.alerts.model.Firestation;
-import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.model.dto.ChildAlertListDto;
 import com.safetynet.alerts.model.dto.FloodByStationsDto;
 import com.safetynet.alerts.model.dto.PersonByAdressDto;
 import com.safetynet.alerts.model.dto.PersonByStationDto;
 import com.safetynet.alerts.model.dto.PersonRecordDto;
-import com.safetynet.alerts.service.InformationService;
 import com.safetynet.alerts.service.InformationServiceInterface;
 
 @RestController
@@ -33,6 +26,8 @@ public class InformationController {
 	
 	@Autowired
 	private InformationServiceInterface informationService;
+	
+	private Logger logger = LogManager.getLogger("InformationController");
 	
 	
 	@GetMapping(path = "/personInfo", produces=MediaType.APPLICATION_JSON_VALUE)
@@ -47,7 +42,12 @@ public class InformationController {
 	@ResponseBody
 	public List<String> getCommunityEmails(@RequestParam("city") String city) {
 		
-		return informationService.getCityEmails(city);
+		List<String> list = informationService.getCityEmails(city);
+		if(list.isEmpty()) {
+			logger.error("No city & communites in our database for : " + city);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Please retry with another word or spell");
+		}
+		return list;
 	}
 	
 	

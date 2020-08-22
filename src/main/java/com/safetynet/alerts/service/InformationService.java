@@ -9,8 +9,10 @@ import java.util.stream.Collectors;
 
 import org.apache.catalina.startup.SetAllPropertiesRule;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.safetynet.alerts.dao.firestationDao.FirestationRepositoryInterface;
 import com.safetynet.alerts.dao.medicalrecordDao.MedicalrecordRepositoryInterface;
@@ -43,7 +45,9 @@ public class InformationService implements InformationServiceInterface {
 		PersonRecordDto personRecordDto = new PersonRecordDto();
 		
 		Person person = personRepository.getPersonsList().stream().filter(
-				pers -> pers.getLastName().equals(lastName) && pers.getFirstName().equals(firstName)).findAny().orElse(null);
+				pers -> pers.getLastName().equals(lastName) && pers.getFirstName().equals(firstName)).findAny().orElseThrow(
+						() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Person Not Found"));
+		
 		
 		personRecordDto.setFirstName(person.getFirstName());
 		personRecordDto.setLastName(person.getLastName());
@@ -142,7 +146,8 @@ public class InformationService implements InformationServiceInterface {
 		List<PersonRecordDto> personList = new ArrayList<PersonRecordDto>();
 		
 		int station = firestationRepository.getFirestationsList().stream().filter( 
-				fire -> fire.getAddress().equals(adress)).findAny().orElse(null).getStation();
+				fire -> fire.getAddress().equals(adress)).findAny().orElseThrow(
+						() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Firestation Not Found")).getStation();
 		personByAdressDto.setFirestationNumber(station);
 		
 		personRepository.getPersonsList().stream().filter(
@@ -206,7 +211,8 @@ public class InformationService implements InformationServiceInterface {
 	private void setMedicByPerson(String firstName, String lastName, PersonRecordDto personDto) {
 		
 		Medicalrecord medicalRecord = medicalrecordRepository.getMedicalrecordsList().stream().filter(
-				medic -> medic.getFirstName().equals(firstName) && medic.getLastName().equals(lastName)).findAny().orElse(null);
+				medic -> medic.getFirstName().equals(firstName) && medic.getLastName().equals(lastName)).findAny().orElseThrow(
+						() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Medical record Not Found"));
 		
 		personDto.setAllergies(medicalRecord.getAllergies());
 		personDto.setMedications(medicalRecord.getMedications());
@@ -219,7 +225,8 @@ public class InformationService implements InformationServiceInterface {
 		
 		return medicalrecordRepository.getMedicalrecordsList().stream().filter(
 				medic -> medic.getFirstName().equals(firstName) && medic.getLastName().equals(lastName)).map(
-						medic -> medic.getBirthdate()).findAny().orElse(null);
+						medic -> medic.getBirthdate()).findAny().orElseThrow(
+								() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Medical record Not Found"));
 	}
 
 	private int calculateAge(String birthDate) {
