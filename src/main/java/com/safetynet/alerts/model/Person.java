@@ -1,10 +1,6 @@
 package com.safetynet.alerts.model;
 
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
 public class Person {
 	private String firstName;
 	private String lastName;
@@ -13,6 +9,7 @@ public class Person {
 	private String zip;
 	private String phone;
 	private String email;
+	
 	public String getFirstName() {
 		return firstName;
 	}
