@@ -1,7 +1,5 @@
 package com.safetynet.alerts.model;
 
-import lombok.Getter;
-import lombok.Setter;
 
 public class Firestation {
 	private String address;

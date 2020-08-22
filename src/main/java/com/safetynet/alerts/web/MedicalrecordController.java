@@ -1,46 +1,41 @@
 package com.safetynet.alerts.web;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.safetynet.alerts.dao.personDao.PersonRepositoryInterface;
-import com.safetynet.alerts.model.Person;
+import com.safetynet.alerts.dao.medicalrecordDao.MedicalrecordRepositoryInterface;
+import com.safetynet.alerts.model.Medicalrecord;
 
 @RestController
-@RequestMapping("/person")
-public class PersonController {
-	
+@RequestMapping("/medicalRecord")
+public class MedicalrecordController {
+		
 	@Autowired
-	private PersonRepositoryInterface personRepository;
+	private MedicalrecordRepositoryInterface medicalrecordRepository;
 	
 	
 	
 	@RequestMapping(method = RequestMethod.PUT, produces=MediaType.APPLICATION_JSON_VALUE)
-	public void updatePerson(@RequestBody Person person) {
+	public void updateMedicalrecord(@RequestBody Medicalrecord medicalrecord) {
 		
-		personRepository.updatePerson(person);
+		medicalrecordRepository.updateMedicalrecord(medicalrecord);
 	}
 	
 	
 	@RequestMapping(method = RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE)
-	public void createPerson(@RequestBody Person person) {
+	public void createMedicalrecord(@RequestBody Medicalrecord medicalrecord) {
 		
-		personRepository.createPerson(person);
+		medicalrecordRepository.createMedicalrecord(medicalrecord);
 	}
 	
 	
 	@RequestMapping( method = RequestMethod.DELETE, produces=MediaType.APPLICATION_JSON_VALUE)
-	public void deletePerson(@RequestBody Person person) {
+	public void deleteMedicalrecord(@RequestBody Medicalrecord medicalrecord) {
 		
-		personRepository.deletePerson(person);
+		medicalrecordRepository.deleteMedicalrecord(medicalrecord);
 	}
-	
-	 
 }
