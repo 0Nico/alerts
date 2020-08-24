@@ -3,7 +3,9 @@ package com.safetynet.alerts.dao.firestationDao;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.safetynet.alerts.dao.jsontools.JsonReaderInterface;
 import com.safetynet.alerts.model.Database;
@@ -58,10 +60,11 @@ public class FirestationRepository implements FirestationRepositoryInterface {
 		List<Firestation> firestations = database.getFirestations();
 		
 		Firestation foundFirestation = firestations.stream().filter(fire -> 
-		fire.equals(firestation)).findFirst().orElse(null);
-	
+		fire.getAddress().equals(firestation.getAddress())).findFirst().orElseThrow(
+				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Firestation Not Found"));
+		
 		firestations.remove(foundFirestation);
-		firestations.add(foundFirestation);
+		firestations.add(firestation);
 		database.setFirestations(firestations);
 		jsonReader.writeInJsonFile(database);
 		

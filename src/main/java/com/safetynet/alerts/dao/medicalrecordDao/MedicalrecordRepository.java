@@ -31,7 +31,9 @@ public class MedicalrecordRepository implements MedicalrecordRepositoryInterface
 		Database database = jsonReader.getDatabase();
 		
 		List<Medicalrecord> medicalrecords = database.getMedicalrecords();
-		Medicalrecord foundMedicalrecord = medicalrecords.stream().filter(medic -> medic.equals(medicalrecord)).findFirst().orElse(null);
+		Medicalrecord foundMedicalrecord = medicalrecords.stream().filter(medic -> 
+		medic.getFirstName().equals(medicalrecord.getFirstName()) 
+		&& medic.getLastName().equals(medicalrecord.getLastName())).findFirst().orElse(null);
 		medicalrecords.remove(foundMedicalrecord);
 		database.setMedicalrecords(medicalrecords);
 		
