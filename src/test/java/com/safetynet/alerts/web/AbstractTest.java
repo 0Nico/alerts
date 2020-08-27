@@ -6,10 +6,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -22,7 +21,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.alerts.AlertsApplication;
 
 
-@RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = AlertsApplication.class)
 @WebAppConfiguration
 public abstract class AbstractTest {
@@ -31,10 +29,19 @@ public abstract class AbstractTest {
    
    @Autowired
    WebApplicationContext webApplicationContext;
-
-   protected void setUp() {
-      mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+   
+   
+   @BeforeEach
+   public void setUp() {
+	   mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+      
+      try {
+   	   clearJsonDatabase();
+      } catch (IOException e) {
+   	   e.printStackTrace();
+      }
    }
+
    
    protected String mapToJson(Object obj) throws JsonProcessingException {
       ObjectMapper objectMapper = new ObjectMapper();

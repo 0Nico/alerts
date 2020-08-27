@@ -3,7 +3,9 @@ package com.safetynet.alerts.dao.medicalrecordDao;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.safetynet.alerts.dao.jsontools.JsonReaderInterface;
 import com.safetynet.alerts.model.Database;
@@ -24,6 +26,14 @@ public class MedicalrecordRepository implements MedicalrecordRepositoryInterface
 		return database.getMedicalrecords();
 		
 	}
+	
+	@Override
+	public Medicalrecord getMedicalrecord(Medicalrecord medicalrecord) {
+		
+		Database database = jsonReader.getDatabase();
+		return database.getMedicalrecords().stream().filter(medic -> medic.equals(medicalrecord)).findFirst().orElseThrow(
+				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "MedicalRecord Not Found"));
+	}
 
 	@Override
 	public void deleteMedicalrecord(Medicalrecord medicalrecord) {
@@ -31,9 +41,8 @@ public class MedicalrecordRepository implements MedicalrecordRepositoryInterface
 		Database database = jsonReader.getDatabase();
 		
 		List<Medicalrecord> medicalrecords = database.getMedicalrecords();
-		Medicalrecord foundMedicalrecord = medicalrecords.stream().filter(medic -> 
-		medic.getFirstName().equals(medicalrecord.getFirstName()) 
-		&& medic.getLastName().equals(medicalrecord.getLastName())).findFirst().orElse(null);
+		Medicalrecord foundMedicalrecord = medicalrecords.stream().filter(medic -> medic.equals(medicalrecord)).findFirst().orElseThrow(
+				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "MedicalRecord Not Found"));
 		medicalrecords.remove(foundMedicalrecord);
 		database.setMedicalrecords(medicalrecords);
 		
@@ -61,9 +70,8 @@ public class MedicalrecordRepository implements MedicalrecordRepositoryInterface
 		
 		List<Medicalrecord> medicalrecords = database.getMedicalrecords();
 		
-		Medicalrecord foundMedicalrecord = medicalrecords.stream().filter(medic -> 
-		medic.getFirstName().equals(medicalrecord.getFirstName()) 
-		&& medic.getLastName().equals(medicalrecord.getLastName())).findFirst().orElse(null);
+		Medicalrecord foundMedicalrecord = medicalrecords.stream().filter(medic -> medic.equals(medicalrecord)).findFirst().orElseThrow(
+				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "MedicalRecord Not Found"));
 	
 		medicalrecords.remove(foundMedicalrecord);
 		medicalrecords.add(medicalrecord);
@@ -72,6 +80,8 @@ public class MedicalrecordRepository implements MedicalrecordRepositoryInterface
 		jsonReader.writeInJsonFile(database);
 		
 	}
+
+	
 
 
 }

@@ -26,13 +26,21 @@ public class PersonRepository implements PersonRepositoryInterface{
 	}
 	
 	@Override
+	public Person getPerson(Person person) {
+		
+		Database database = jsonReader.getDatabase();
+		
+		return database.getPersons().stream().filter(pers -> pers.equals(person)).findFirst().orElseThrow(
+				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Person Not Found"));
+	};
+	
+	@Override
 	public void deletePerson(Person person) {
 		
 		Database database = jsonReader.getDatabase();
 		
 		List<Person> persons = database.getPersons();
-		Person foundPerson = persons.stream().filter(pers -> pers.getFirstName().equals(person.getFirstName()) 
-				&& pers.getLastName().equals(person.getLastName())).findFirst().orElseThrow(
+		Person foundPerson = persons.stream().filter(pers -> pers.equals(person)).findFirst().orElseThrow(
 				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Person Not Found"));
 		persons.remove(foundPerson);
 		database.setPersons(persons);
@@ -61,9 +69,7 @@ public class PersonRepository implements PersonRepositoryInterface{
 		
 		List<Person> persons = database.getPersons();
 		
-		Person foundPerson = persons.stream().filter(pers -> 
-		pers.getFirstName().equals(person.getFirstName()) 
-		&& pers.getLastName().equals(person.getLastName())).findFirst().orElseThrow(
+		Person foundPerson = persons.stream().filter(pers -> pers.equals(person)).findFirst().orElseThrow(
 				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Person Not Found"));
 	
 		persons.remove(foundPerson);
@@ -71,6 +77,8 @@ public class PersonRepository implements PersonRepositoryInterface{
 		database.setPersons(persons);
 		jsonReader.writeInJsonFile(database);
 		
-	};
+	}
+
+	
 	
 }

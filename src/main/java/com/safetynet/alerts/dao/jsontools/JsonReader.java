@@ -24,8 +24,7 @@ public class JsonReader implements JsonReaderInterface {
 		try {
 			return mapper.readValue(newState, Database.class);
 		} catch (IOException e) {
-			logger.error("Error while reading database file. Please check existence, extension of "+ newState.getPath());
-			e.printStackTrace();
+			logger.error("Error while reading database file. Please check existence, extension of "+ newState.getPath(), e);
 		}
 		return null;
 	}
@@ -36,8 +35,7 @@ public class JsonReader implements JsonReaderInterface {
 		try {
 			mapper.writeValue(newState, database);
 		} catch (IOException e) {
-			logger.error("Error while writing in database file. Please check existence and read-only parameter of "+ newState.getPath());
-			e.printStackTrace();
+			logger.error("Error while writing in database file. Please check existence and read-only parameter of "+ newState.getPath(), e);
 		}
 	}
 

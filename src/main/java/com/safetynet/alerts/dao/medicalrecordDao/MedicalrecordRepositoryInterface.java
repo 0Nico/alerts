@@ -11,6 +11,7 @@ public interface MedicalrecordRepositoryInterface {
 
 	List<Medicalrecord> getMedicalrecordsList();
 	
+	Medicalrecord getMedicalrecord(Medicalrecord medicalrecord);
 	void deleteMedicalrecord(Medicalrecord medicalrecord);
 	
 	void createMedicalrecord(Medicalrecord medicalrecord);

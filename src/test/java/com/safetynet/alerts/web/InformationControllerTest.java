@@ -1,43 +1,25 @@
 package com.safetynet.alerts.web;
-import org.junit.jupiter.api.BeforeEach;
+
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.safetynet.alerts.model.dto.ChildAlertListDto;
 import com.safetynet.alerts.model.dto.FloodByStationsDto;
 import com.safetynet.alerts.model.dto.PersonByAdressDto;
 import com.safetynet.alerts.model.dto.PersonByStationDto;
 import com.safetynet.alerts.model.dto.PersonRecordDto;
 
-import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
 
 
 public class InformationControllerTest extends AbstractTest{
 
-	@Override
-    @BeforeEach
-    public void setUp() {
-       super.setUp();
-       
-       try {
-    	   super.clearJsonDatabase();
-       } catch (IOException e) {
-    	   e.printStackTrace();
-       }
-    }
+	
 
 	@Test
 	public void getEmailsList() throws Exception {
