@@ -1,39 +1,26 @@
 package com.safetynet.alerts.web;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-
-import org.junit.Before;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.server.ResponseStatusException;
 
+import com.safetynet.alerts.dao.firestationDao.FirestationRepositoryInterface;
 import com.safetynet.alerts.model.Firestation;
-import com.safetynet.alerts.service.InformationServiceInterface;
 
 public class FirestationControllerTest extends AbstractTest{
 
 	final String uri = "/firestation";
 	
 	@Autowired
-	InformationServiceInterface informationService;
+	private FirestationRepositoryInterface firestationRepository;
 	
-	
-	@Override
-    @BeforeEach
-    public void setUp() {
-       super.setUp();
-       
-       try {
-    	   super.clearJsonDatabase();
-       } catch (IOException e) {
-    	   e.printStackTrace();
-       }
-    }
 
 	
 	@Test
@@ -49,6 +36,9 @@ public class FirestationControllerTest extends AbstractTest{
 	   int status = mvcResult.getResponse().getStatus();
 	   assertEquals(200, status);
 	   
+	   Firestation updatedFirestation = firestationRepository.getFirestation(firestation);
+	   assertEquals(firestation.getStation(), updatedFirestation.getStation());
+	   
 	}
 	
 	@Test
@@ -63,7 +53,8 @@ public class FirestationControllerTest extends AbstractTest{
 		   
 	    int status = mvcResult.getResponse().getStatus();
 	    assertEquals(200, status);
-	   
+	    assertTrue(firestationRepository.getFirestation(firestation).equals(firestation));
+		
 	}
 	
 	@Test
@@ -78,6 +69,7 @@ public class FirestationControllerTest extends AbstractTest{
 		
 		int status = mvcResult.getResponse().getStatus();
 		assertEquals(200, status);
+		assertThrows(ResponseStatusException.class, () -> firestationRepository.getFirestation(firestation));
 	   
 	}
 }

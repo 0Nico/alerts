@@ -25,13 +25,23 @@ public class FirestationRepository implements FirestationRepositoryInterface {
 		return database.getFirestations();
 	}
 
+	
+	@Override
+	public Firestation getFirestation(Firestation firestation) {
+		Database database = jsonReader.getDatabase();
+		return database.getFirestations().stream().filter( fire -> fire.equals(firestation)).findFirst().orElseThrow(
+						() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Firestation Not Found"));
+		
+	}
+	
 	@Override
 	public void deleteFirestation(Firestation firestation) {
 		
 		Database database = jsonReader.getDatabase();
 		
 		List<Firestation> firestations = database.getFirestations();
-		Firestation foundFirestation = firestations.stream().filter(fire -> fire.equals(firestation)).findFirst().orElse(null);
+		Firestation foundFirestation = firestations.stream().filter(fire -> fire.equals(firestation)).findFirst().orElseThrow(
+				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Firestation Not Found"));
 		firestations.remove(foundFirestation);
 		database.setFirestations(firestations);
 		
@@ -59,8 +69,7 @@ public class FirestationRepository implements FirestationRepositoryInterface {
 		
 		List<Firestation> firestations = database.getFirestations();
 		
-		Firestation foundFirestation = firestations.stream().filter(fire -> 
-		fire.getAddress().equals(firestation.getAddress())).findFirst().orElseThrow(
+		Firestation foundFirestation = firestations.stream().filter(fire -> fire.equals(firestation)).findFirst().orElseThrow(
 				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Firestation Not Found"));
 		
 		firestations.remove(foundFirestation);
@@ -69,6 +78,8 @@ public class FirestationRepository implements FirestationRepositoryInterface {
 		jsonReader.writeInJsonFile(database);
 		
 	}
+
+	
 
 	
 

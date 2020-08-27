@@ -2,11 +2,10 @@ package com.safetynet.alerts.web;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -14,29 +13,16 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.safetynet.alerts.dao.medicalrecordDao.MedicalrecordRepositoryInterface;
 import com.safetynet.alerts.model.Medicalrecord;
-import com.safetynet.alerts.model.dto.PersonRecordDto;
-import com.safetynet.alerts.service.InformationServiceInterface;
 
 public class MedicalrecordControllerTest extends AbstractTest{
 
 	final String uri = "/medicalRecord";
 	
 	@Autowired
-	InformationServiceInterface informationService;
+	MedicalrecordRepositoryInterface medicalrecordrepository;
 	
-	
-	@Override
-    @BeforeEach
-    public void setUp() {
-       super.setUp();
-       
-       try {
-    	   super.clearJsonDatabase();
-       } catch (IOException e) {
-    	   e.printStackTrace();
-       }
-    }
 	
 		
 	
@@ -57,8 +43,8 @@ public class MedicalrecordControllerTest extends AbstractTest{
 	   int status = mvcResult.getResponse().getStatus();
 	   assertEquals(200, status);
 	   
-	   PersonRecordDto personDto = informationService.getPersonInfo(medicalrecord.getFirstName(), medicalrecord.getLastName());
-	   assertEquals(personDto.getAllergies(), medicalrecord.getAllergies());
+	   Medicalrecord updatedMedicalrecord = medicalrecordrepository.getMedicalrecord(medicalrecord);
+	   assertEquals(updatedMedicalrecord.getBirthdate(), medicalrecord.getBirthdate());
 	   
 	}
 	
@@ -79,6 +65,7 @@ public class MedicalrecordControllerTest extends AbstractTest{
 		   
 	    int status = mvcResult.getResponse().getStatus();
 	    assertEquals(200, status);
+	    assertTrue(medicalrecordrepository.getMedicalrecord(medicalrecord).equals(medicalrecord));
 	   
 	}
 	
@@ -94,7 +81,7 @@ public class MedicalrecordControllerTest extends AbstractTest{
 		
 		int status = mvcResult.getResponse().getStatus();
 		assertEquals(200, status);
-		assertThrows(ResponseStatusException.class, () -> informationService.getPersonInfo(medicalrecord.getFirstName(), medicalrecord.getLastName()));
+		assertThrows(ResponseStatusException.class, () -> medicalrecordrepository.getMedicalrecord(medicalrecord));
 	   
 	}
 }

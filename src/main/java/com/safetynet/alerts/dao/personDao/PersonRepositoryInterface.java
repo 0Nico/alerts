@@ -12,6 +12,7 @@ public interface PersonRepositoryInterface {
 
 	List<Person> getPersonsList();
 	
+	Person getPerson(Person person);
 	void deletePerson(Person person);
 	
 	void createPerson(Person person);

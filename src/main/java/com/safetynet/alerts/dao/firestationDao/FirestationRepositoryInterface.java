@@ -11,6 +11,7 @@ public interface FirestationRepositoryInterface {
 
 	List<Firestation> getFirestationsList();
 	
+	Firestation getFirestation(Firestation firestation);
 	void deleteFirestation(Firestation firestation);
 	
 	void createFirestation(Firestation firestation);

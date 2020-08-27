@@ -2,10 +2,8 @@ package com.safetynet.alerts.web;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -13,6 +11,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.safetynet.alerts.dao.personDao.PersonRepositoryInterface;
 import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.model.dto.PersonRecordDto;
 import com.safetynet.alerts.service.InformationServiceInterface;
@@ -22,19 +21,8 @@ public class PersonControllerTest extends AbstractTest{
 	final String uri = "/person";
 	
 	@Autowired
-	InformationServiceInterface informationService;
+	PersonRepositoryInterface personRepository;
 	
-	@Override
-    @BeforeEach
-    public void setUp() {
-       super.setUp();
-       
-       try {
-    	   super.clearJsonDatabase();
-       } catch (IOException e) {
-    	   e.printStackTrace();
-       }
-    }
 	
 	
 	@Test
@@ -52,8 +40,9 @@ public class PersonControllerTest extends AbstractTest{
 	   int status = mvcResult.getResponse().getStatus();
 	   assertEquals(200, status);
 	   
-	   PersonRecordDto personDto = informationService.getPersonInfo(person.getFirstName(), person.getLastName());
-	   assertEquals(personDto.getEmail(), person.getEmail());
+	   Person updatedPerson = personRepository.getPerson(person);
+	   assertEquals(updatedPerson.getEmail(), person.getEmail());
+	   assertEquals(updatedPerson.getCity(), person.getCity());
 	   
 	}
 	
@@ -74,6 +63,7 @@ public class PersonControllerTest extends AbstractTest{
 		   
 	    int status = mvcResult.getResponse().getStatus();
 	    assertEquals(200, status);
+	    assertTrue(personRepository.getPerson(person).equals(person));
 	   
 	}
 	
@@ -89,7 +79,7 @@ public class PersonControllerTest extends AbstractTest{
 		
 		int status = mvcResult.getResponse().getStatus();
 		assertEquals(200, status);
-		assertThrows(ResponseStatusException.class, () -> informationService.getPersonInfo(person.getFirstName(), person.getLastName()));
+		assertThrows(ResponseStatusException.class, () -> personRepository.getPerson(person));
 	   
 	}
 	
