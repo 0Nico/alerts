@@ -31,7 +31,8 @@ public class PersonRepository implements PersonRepositoryInterface{
 		Database database = jsonReader.getDatabase();
 		
 		List<Person> persons = database.getPersons();
-		Person foundPerson = persons.stream().filter(pers -> pers.equals(person)).findFirst().orElseThrow(
+		Person foundPerson = persons.stream().filter(pers -> pers.getFirstName().equals(person.getFirstName()) 
+				&& pers.getLastName().equals(person.getLastName())).findFirst().orElseThrow(
 				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Person Not Found"));
 		persons.remove(foundPerson);
 		database.setPersons(persons);
