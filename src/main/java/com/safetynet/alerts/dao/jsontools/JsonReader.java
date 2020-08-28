@@ -10,6 +10,10 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.alerts.model.Database;
 
+/**
+ * @author 0Nico
+ * Tool class which read & write in the db Json file.
+ */
 @Component
 public class JsonReader implements JsonReaderInterface {
 	

@@ -14,6 +14,10 @@ import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * @author 0Nico
+ * Config class logging request & response for each endpoint call.
+ */
 @Slf4j
 @Component
 public class AlertsFilter extends OncePerRequestFilter{

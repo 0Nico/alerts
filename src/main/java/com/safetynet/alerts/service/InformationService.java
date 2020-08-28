@@ -23,6 +23,10 @@ import com.safetynet.alerts.model.dto.PersonByAdressDto;
 import com.safetynet.alerts.model.dto.PersonByStationDto;
 import com.safetynet.alerts.model.dto.PersonRecordDto;
 
+/**
+ * @author 0Nico
+ * Service class for Urls.pdf endpoints required operations
+ */
 @Service
 public class InformationService implements InformationServiceInterface {
 	

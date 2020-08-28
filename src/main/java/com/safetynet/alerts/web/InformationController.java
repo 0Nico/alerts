@@ -15,6 +15,10 @@ import com.safetynet.alerts.model.dto.PersonByStationDto;
 import com.safetynet.alerts.model.dto.PersonRecordDto;
 import com.safetynet.alerts.service.InformationServiceInterface;
 
+/**
+ * @author 0Nico
+ * Controller class for URLs.pdf endpoint's
+ */
 @RestController
 public class InformationController {
 
